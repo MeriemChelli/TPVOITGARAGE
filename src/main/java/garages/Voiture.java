@@ -29,9 +29,15 @@ public class Voiture {
 	 */
 	public void entreAuGarage(Garage g) throws Exception {
 		// Et si la voiture est déjà dans un garage ?
+	   
+		if(estDansUnGarage()){
+			throw new java.lang.Exception("voiture dans le garage");
+
+		}
+		else{
 
 		Stationnement s = new Stationnement(this, g);
-		myStationnements.add(s);
+		myStationnements.add(s);}
 	}
 
 	/**
@@ -60,10 +66,24 @@ public class Voiture {
 	 */
 	public boolean estDansUnGarage() {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
-		// Vrai si le dernier stationnement est en cours
-	}
+     if(estEnCours()==true){
+		return  true;
+	 }else{
+		return false;
+	 }
 
+		// Vrai si le dernier stationnement est en cours
+	    
+}
+public boolean estEnCours(){
+	int lastIdx = myStationnements.size() - 1;	
+	Stationnement lastElement = myStationnements.get(lastIdx);
+	if(lastElement==null){
+		return true;
+	}
+	else
+	return false;
+}
 	/**
 	 * Pour chaque garage visité, imprime le nom de ce garage suivi de la liste des
 	 * dates d'entrée / sortie dans ce garage
