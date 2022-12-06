@@ -1,3 +1,4 @@
+
 package garages;
 
 import java.io.PrintStream;
@@ -7,6 +8,7 @@ public class Voiture {
 
 	private final String immatriculation;
 	private final List<Stationnement> myStationnements = new LinkedList<>();
+	private final Set<Garage> myGarages = new HashSet<>();
 
 	public Voiture(String i) {
 		if (null == i) {
@@ -29,15 +31,13 @@ public class Voiture {
 	 */
 	public void entreAuGarage(Garage g) throws Exception {
 		// Et si la voiture est déjà dans un garage ?
-	   
-		if(estDansUnGarage()){
-			throw new java.lang.Exception("voiture dans le garage");
-
-		}
-		else{
-
+		if (this.estDansUnGarage() == true) {
+			throw new UnsupportedOperationException("Voiture déjà dans un garage !");
+		} else {
 		Stationnement s = new Stationnement(this, g);
-		myStationnements.add(s);}
+		myStationnements.add(s);
+		myGarages.add(g);
+		}
 	}
 
 	/**
@@ -47,8 +47,17 @@ public class Voiture {
 	 * @throws java.lang.Exception si la voiture n'est pas dans un garage
 	 */
 	public void sortDuGarage() throws Exception {
-		throw new UnsupportedOperationException("Pas encore implémenté");
 		// TODO: Implémenter cette méthode
+		if (this.estDansUnGarage() == false) {
+			throw new UnsupportedOperationException("Voiture n'est pas dans un garage !");
+		} else {
+			int last = myStationnements.size() - 1;
+			if (last >= 0) {
+			if (myStationnements.get(last).estEnCours()) {
+				myStationnements.get(last).terminer();
+			}
+		}
+		}
 		// Trouver le dernier stationnement de la voiture
 		// Terminer ce stationnement
 	}
@@ -58,7 +67,7 @@ public class Voiture {
 	 */
 	public Set<Garage> garagesVisites() {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		return myGarages;
 	}
 
 	/**
@@ -66,24 +75,16 @@ public class Voiture {
 	 */
 	public boolean estDansUnGarage() {
 		// TODO: Implémenter cette méthode
-     if(estEnCours()==true){
-		return  true;
-	 }else{
-		return false;
-	 }
 
 		// Vrai si le dernier stationnement est en cours
-	    
-}
-public boolean estEnCours(){
-	int lastIdx = myStationnements.size() - 1;	
-	Stationnement lastElement = myStationnements.get(lastIdx);
-	if(lastElement==null){
-		return true;
+		int last = myStationnements.size() - 1;
+		if (last >= 0) {
+		if (myStationnements.get(last).estEnCours()) {
+			return true;
+		} else {return false;}
+		} else {return false;}
 	}
-	else
-	return false;
-}
+
 	/**
 	 * Pour chaque garage visité, imprime le nom de ce garage suivi de la liste des
 	 * dates d'entrée / sortie dans ce garage
@@ -102,7 +103,19 @@ public boolean estEnCours(){
 	 */
 	public void imprimeStationnements(PrintStream out) {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+
+		String impression = "";
+        for(Garage g : this.garagesVisites()) {
+            impression += "\n" + g.toString();
+            for(Stationnement s : this.myStationnements) {
+                if (s.getGarage() == g) {
+                    impression += "\n    " + s.toString();
+					System.out.print(impression);
+                }
+            }
+        }
+
+        out.println(impression);
 	}
 
 }
